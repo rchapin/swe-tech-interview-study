@@ -1,0 +1,95 @@
+package main
+
+import (
+	"bufio"
+	"context"
+	"fmt"
+	"flag"
+	"net"
+	"os"
+	"sync"
+	"time"
+)
+
+const (
+	readTimeoutSeconds = 5
+)
+
+func connect(wg *sync.WaitGroup, ctx context.Context, c chan string, protocol, host, port string) {
+
+}
+
+func connectAndSend(wg *sync.WaitGroup, ctx context.Context, c chan string, protocol, host, port string) {
+	defer wg.Done()
+	defer func() {
+		if r := recover(); r != nil {
+
+		}
+	}()
+	// var d := net.Dialer
+	// conn, err := d.DialContext(ctx, protocol, host + ":" + port)
+	conn, err := net.Dial(protocol, host + ":" + port)
+
+	if err != nil {
+		panic(err)
+	}
+	defer conn.Close()
+
+	ReadLoop:
+		for {
+			select {
+			case input := <-c:
+				conn.SetWriteDeadline(time.Now().Add(5 * time.Second))
+				_, err := conn.Write([]byte(input))
+				if err != nil {
+					panic(err)
+				}
+				fmt.Println("After write")
+			case <-ctx.Done():
+				break ReadLoop
+			}
+		}
+	fmt.Println("Closing connection")
+}
+
+func readInput(wg *sync.WaitGroup, cancel context.CancelFunc, c chan string) {
+	defer wg.Done()
+	for {
+		fmt.Printf("Enter data to send to server: ")
+		reader := bufio.NewReader(os.Stdin)
+		input, err := reader.ReadString('\n')
+		if err != nil {
+			panic(err)
+		}
+		if input == "quit\n" {
+			cancel()
+			break
+		}
+		c <- input
+	}
+}
+
+func main() {
+	// Parse cli input
+	var host, port, protocol string
+	flag.StringVar(&host, "host", "", "Hostname to which we will connect")
+	flag.StringVar(&port, "port", "", "Port on which will will connect")
+	flag.StringVar(&protocol, "protocol", "", "Protocol used for the connection")
+	flag.Parse()
+	fmt.Printf("client connecting; protocol=%s, host=%s, port=%s\n", protocol, host, port)
+
+	_, cancel := context.WithCancel(context.Background())
+
+	wg := &sync.WaitGroup{}
+	inputChan := make(chan string)
+
+	// wg.Add(1)
+	// go connectAndSend(wg, ctx, c, protocol, host, port)
+
+	fmt.Println("Enter 'quit' to exit")
+	wg.Add(1)
+	go readInput(wg, cancel, inputChan)
+
+	wg.Wait()
+	fmt.Println("Shutdown . . . exiting")
+}

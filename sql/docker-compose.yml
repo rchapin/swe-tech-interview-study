@@ -1,0 +1,14 @@
+services:
+  database:
+    image: postgres:18.3
+    container_name: postgres-study
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=abc123
+      - POSTGRES_DB=company
+    volumes:
+      - ./data:/var/lib/postgresql/
+      - ./db-init:/docker-entrypoint-initdb.d/
+      - ./:/samples/
+    ports:
+      - "5432:5432"

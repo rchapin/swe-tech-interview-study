@@ -1,0 +1,46 @@
+package  main
+
+import "fmt"
+
+type Stack[T any] struct {
+	stack []*T
+}
+
+func (s *Stack[T]) IsEmpty() bool {
+	return len(s.stack) == 0
+}
+
+func (s *Stack[T]) Push(i *T) {
+	s.stack = append(s.stack, i)
+}
+
+func (s *Stack[T]) Pop() *T {
+	if s.IsEmpty() {
+		return nil
+	} else {
+		// Get the index of the last item on the stack
+		idx := len(s.stack) - 1
+		retval := s.stack[idx]
+		// Slice down the slice
+		s.stack = s.stack[:idx]
+		return retval
+	}
+}
+
+
+func main() {
+	s := &Stack[int]{}
+	i := 1
+	j := 2
+	s.Push(&i)
+	s.Push(&j)
+
+	for {
+		if !s.IsEmpty() {
+			fmt.Println(*s.Pop())
+		} else {
+			break
+		}
+	}
+}
+
