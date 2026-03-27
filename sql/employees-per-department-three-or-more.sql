@@ -1,11 +1,10 @@
 SELECT
     d.name,
-    COUNT(e.departments_id) AS employee_count
-FROM departments d
-JOIN employees e
-    ON e.departments_id = d.id
+    COUNT(e.department_id) AS employee_count
+FROM
+    department d
+    JOIN employee e ON e.department_id = d.id
 GROUP BY
     d.name
 HAVING
-    COUNT(e.departments_id) >= 3
-;
+    COUNT(e.department_id) >= 3;

@@ -7,8 +7,10 @@ SELECT
     s.salary,
     d.name
 FROM
-    employee e
-    INNER JOIN salary s ON e.salary = s.id
-    INNER JOIN department d ON e.department_id = d.id
+    employee e,
+    salary s,
+    department d
 WHERE
-    s.salary > 1500;
+    e.salary = s.id
+    AND e.department_id = d.id
+    AND s.salary > 1500;

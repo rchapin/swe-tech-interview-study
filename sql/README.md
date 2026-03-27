@@ -37,7 +37,11 @@ Or, `exec` into the container and run `psql` commands.
     ```
     psql -U postgres -d company
     ```
-1.  Once running `psql`, you can run queries in files that are in the same directory from which you ran `psql` with the following syntax:
+1. To list the files in the directory from which `psql` was run, execute the following in `psql`
+    ```
+    \! ls
+    ```
+1. Once running `psql`, you can run queries in files that are in the same directory from which you ran `psql` with the following syntax:
     ```
     \i <file-name>
     ```

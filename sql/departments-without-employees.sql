@@ -1,10 +1,7 @@
 SELECT
     d.name
 FROM
-    departments d
-LEFT OUTER JOIN employees e
-    ON e.departments_id = d.id
+    department d
+    LEFT OUTER JOIN employee e ON e.department_id = d.id
 WHERE
-    e.departments_id IS NULL
-;
- 
+    e.department_id IS NULL;
