@@ -1,13 +1,13 @@
 SELECT
-    s.products_id, p.id, p.name
+    s.product_id,
+    p.id,
+    p.name
 FROM
-    products p
-    -- LEFT JOIN sales s
-    FULL JOIN sales s
-    ON p.id = s.products_id
--- WHERE
---     s.products_id is NULL
+    product p -- LEFT JOIN sales s
+    FULL
+    JOIN sales s ON p.id = s.product_id -- WHERE
+    --     s.product_id is NULL
 GROUP BY
-    p.name, p.id, s.products_id
-;
-
+    p.name,
+    p.id,
+    s.product_id;

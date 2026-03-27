@@ -1,13 +1,13 @@
-DROP TABLE IF EXISTS departments,
-employees,
+DROP TABLE IF EXISTS department,
+employee,
 salary,
 phone_number_type,
-employees_phone_numbers,
-customers,
-products,
+phone_number,
+customer,
+product,
 sales CASCADE;
 
-CREATE TABLE departments(
+CREATE TABLE department(
     id SERIAL PRIMARY KEY,
     name VARCHAR(256) NOT NULL
 );
@@ -17,11 +17,11 @@ CREATE TABLE salary(
     salary INT NOT NULL
 );
 
-CREATE TABLE employees(
+CREATE TABLE employee(
     id SERIAL PRIMARY KEY,
     first_name VARCHAR(50) NOT NULL,
     last_name VARCHAR(50) NOT NULL,
-    departments_id INT REFERENCES departments(id),
+    department_id INT REFERENCES department(id),
     reports_to INT,
     salary INT REFERENCES salary(id)
 );
@@ -31,34 +31,34 @@ CREATE TABLE phone_number_type(
     name VARCHAR(64) NOT NULL
 );
 
-CREATE TABLE employees_phone_numbers(
+CREATE TABLE phone_number(
     id SERIAL PRIMARY KEY,
-    employees_id INT NOT NULL REFERENCES employees(id),
+    employee_id INT NOT NULL REFERENCES employee(id),
     phone_number VARCHAR(32) NOT NULL UNIQUE,
     phone_number_type_id INT NOT NULL REFERENCES phone_number_type(id)
 );
 
-CREATE TABLE customers(
+CREATE TABLE customer(
     id SERIAL PRIMARY KEY,
     name VARCHAR(128) NOT NULL
 );
 
-CREATE TABLE products(
+CREATE TABLE product(
     id SERIAL PRIMARY KEY,
     name VARCHAR(256) NOT NULL
 );
 
 CREATE TABLE sales(
     id SERIAL PRIMARY KEY,
-    customer_id INT NOT NULL REFERENCES customers(id),
-    employees_id INT NOT NULL REFERENCES employees(id),
+    customer_id INT NOT NULL REFERENCES customer(id),
+    employee_id INT NOT NULL REFERENCES employee(id),
     sale_date DATE NOT NULL,
-    products_id INT NOT NULL REFERENCES products(id),
+    product_id INT NOT NULL REFERENCES product(id),
     price INT NOT NULL
 );
 
 INSERT INTO
-    departments (name)
+    department (name)
 VALUES
     ('Sales'),
     ('Financing'),
@@ -81,11 +81,11 @@ VALUES
     (11, 935);
 
 INSERT INTO
-    employees (
+    employee (
         id,
         first_name,
         last_name,
-        departments_id,
+        department_id,
         reports_to,
         salary
     )
@@ -111,7 +111,7 @@ VALUES
     ('office');
 
 INSERT INTO
-    employees_phone_numbers (employees_id, phone_number, phone_number_type_id)
+    phone_number (employee_id, phone_number, phone_number_type_id)
 VALUES
     (1, '301-333-1111', 1),
     (1, '410-444-4444', 3),
@@ -126,7 +126,7 @@ VALUES
     (5, '123-123-0987', 3);
 
 INSERT INTO
-    customers (name)
+    customer (name)
 VALUES
     ('Acme'),
     ('J&R'),
@@ -135,7 +135,7 @@ VALUES
     ('Lawyers R Us');
 
 INSERT INTO
-    products (name)
+    product (name)
 VALUES
     ('consulting'),
     ('servers'),
@@ -146,9 +146,9 @@ VALUES
 INSERT INTO
     sales (
         customer_id,
-        employees_id,
+        employee_id,
         sale_date,
-        products_id,
+        product_id,
         price
     )
 VALUES
